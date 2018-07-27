@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NpvSpaApplication.Controllers;
 using NpvSpaApplication.Models;
+using NpvSpaApplication.Service;
 using System.Collections.Generic;
 using System.Web.Http;
 
@@ -13,7 +14,7 @@ namespace NpvSpaApplication.Tests.Controllers
         public void Post()
         {
             // Arrange
-            var controller = new ValuesController();
+            var controller = new ValuesController(new ComputeService());
 
             // Act
             dynamic result = controller.Post(new NpvObjectModel()

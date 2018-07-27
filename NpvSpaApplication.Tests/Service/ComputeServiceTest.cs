@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NpvSpaApplication.Helper;
+using NpvSpaApplication.Service;
 using NpvSpaApplication.Models;
 
-namespace NpvSpaApplication.Tests.Controllers
+namespace NpvSpaApplication.Tests.Service
 {
     [TestClass]
-    public class ComputeHelperTest
+    public class ComputeServiceTest
     {
         readonly NpvObjectModel model = new NpvObjectModel()
         {
@@ -21,7 +21,7 @@ namespace NpvSpaApplication.Tests.Controllers
         public void NpvCollection()
         {
             // Arrange
-            var helper = new ComputeHelper();
+            var helper = new ComputeService();
 
             // Act
             var result = helper.NpvCollection(model);
@@ -36,7 +36,7 @@ namespace NpvSpaApplication.Tests.Controllers
         public void Npv()
         {
             // Arrange
-            var helper = new ComputeHelper();
+            var helper = new ComputeService();
 
             // Act
             var result = helper.Npv(model, model.LowerBoundDiscountRate);

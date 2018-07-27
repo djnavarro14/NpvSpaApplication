@@ -2,9 +2,9 @@
 using System;
 using System.Linq;
 
-namespace NpvSpaApplication.Helper
+namespace NpvSpaApplication.Service
 {
-    public class ComputeHelper
+    public class ComputeService : IComputeService
     {
         public NpvResultModel NpvCollection(NpvObjectModel model)
         {

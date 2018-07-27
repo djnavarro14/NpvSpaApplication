@@ -103,6 +103,7 @@
                 drawChart(result.data)
                 $(model.modalResult).modal('show');
             }, function (error) {
+                debugger;
                 showMessage(error);
             });
         }
