@@ -1,8 +1,4 @@
 ﻿using NpvSpaApplication.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace NpvSpaApplication.Controllers
@@ -14,18 +10,6 @@ namespace NpvSpaApplication.Controllers
             ViewBag.Title = "Home Page";
 
             return View(new NpvObjectModel());
-        }
-        public ActionResult List()
-        {
-            ViewBag.Title = "List Page";
-
-            return View();
-        }
-        public ActionResult Details()
-        {
-            ViewBag.Title = "Details Page";
-
-            return View();
         }
     }
 }
