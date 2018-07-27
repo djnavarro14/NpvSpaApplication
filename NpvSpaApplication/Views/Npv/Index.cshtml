@@ -4,6 +4,8 @@
     ViewBag.Title = "NPV Calculator";
 }
 
+@Scripts.Render("~/bundles/angular")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
     new AppViewModel({
         @Html.IdFor(model => model.InitialInvestment): @Model.InitialInvestment,
@@ -19,7 +21,7 @@
         chartResult: 'chartResult',
     });
 </script>
-    
+
 <form>
     <div class="form-horizontal" ng-app="npvModule" ng-controller="indexController">
         <hr />
