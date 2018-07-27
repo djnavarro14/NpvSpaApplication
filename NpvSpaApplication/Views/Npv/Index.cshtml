@@ -1,0 +1,139 @@
+﻿@model NpvSpaApplication.Models.NpvObjectModel
+
+@{
+    ViewBag.Title = "NPV Calculator";
+}
+
+<script>
+    new AppViewModel({
+        @Html.IdFor(model => model.InitialInvestment): @Model.InitialInvestment,
+        @Html.IdFor(model => model.CashFlow): @Model.CashFlow,
+        @Html.IdFor(model => model.CashFlows): @Json.Encode(Model.CashFlows),
+        @Html.IdFor(model => model.LowerBoundDiscountRate): @Model.LowerBoundDiscountRate,
+        @Html.IdFor(model => model.UpperBoundDiscountRate): @Model.UpperBoundDiscountRate,
+        @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
+        @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
+        @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
+        modalAlert: '#modalAlert',
+        modalResult: '#modalResult',
+        chartResult: 'chartResult',
+    });
+</script>
+    
+<form>
+    <div class="form-horizontal" ng-app="npvModule" ng-controller="indexController">
+        <hr />
+        <div class="form-group">
+            @Html.LabelFor(model => model.InitialInvestment, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="input-group" style="width: 300px">
+                    <span class="input-group-addon">$</span>
+                    <input type="number" ng-model="model.InitialInvestment" class="form-control text-box single-line" step="1" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group form-inline">
+            @Html.Label("Cash Flow:", htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="input-group" style="width: 300px">
+                    <span class="input-group-addon">$</span>
+                    <input type="number" ng-model="model.CashFlow" class="form-control text-box single-line" step="1" />
+                    <span class="input-group-btn">
+                        <button id="btnAdd" type="button" class="btn btn-success" ng-click="add()">Add</button>
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Cash Flows:", htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <table id="tblCashFlows" class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Value</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="cashFlow in model.CashFlows track by $index">
+                            <td>{{ cashFlow }}</td>
+                            <td><button type="button" class="btn btn-danger" ng-click="delete($index)">Delete</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LowerBoundDiscountRate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="input-group" style="width: 300px">
+                    <input type="number" ng-model="model.LowerBoundDiscountRate" class="form-control text-box single-line" step="0.01" />
+                    <span class="input-group-addon">%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.UpperBoundDiscountRate, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="input-group" style="width: 300px">
+                    <input type="number" ng-model="model.UpperBoundDiscountRate" class="form-control text-box single-line" step="0.01" />
+                    <span class="input-group-addon">%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DiscountRateIncrement, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
+                <div class="input-group" style="width: 300px">
+                    <input type="number" ng-model="model.DiscountRateIncrement" class="form-control text-box single-line" step="0.01" />
+                    <span class="input-group-addon">%</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-3 col-md-9">
+                <button id="btnCalculate" type="button" class="btn btn-default" ng-click="calculate()">Calculate</button>
+                <button id="btnReset" type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Npv")'">Reset</button>
+            </div>
+        </div>
+        <hr />
+
+        <div id="modalAlert" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Validation Message</h4>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalResult" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header btn-success">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">NPV Result</h4>
+                    </div>
+                    <div class="modal-body">
+                        <canvas id="chartResult" style="width: 80%; height: 80%"></canvas>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
