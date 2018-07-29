@@ -12,10 +12,9 @@ namespace NpvSpaApplication.Controllers
             _computeSevice = computeService;
         }
 
-        public IHttpActionResult Post([FromBody]NpvObjectModel model)
+        public IHttpActionResult Post([FromBody]NpvDataModel model)
         {
-            var result = _computeSevice.NpvCollection(model);
-            return Ok(result);
+            return Ok(_computeSevice.Npv(model));
         }
     }
 }

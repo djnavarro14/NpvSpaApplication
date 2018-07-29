@@ -8,41 +8,25 @@ namespace NpvSpaApplication.Tests.Service
     [TestClass]
     public class ComputeServiceTest
     {
-        readonly NpvObjectModel model = new NpvObjectModel()
-        {
-            InitialInvestment = 150000,
-            CashFlows = new List<double> { 50000, 25000 },
-            LowerBoundDiscountRate = 1.2,
-            UpperBoundDiscountRate = 1.4,
-            DiscountRateIncrement = 0.1
-        };
-
-        [TestMethod]
-        public void NpvCollection()
-        {
-            // Arrange
-            var helper = new ComputeService();
-
-            // Act
-            var result = helper.NpvCollection(model);
-
-            // Assert
-            Assert.IsNotNull(result);
-            Assert.AreEqual(3, result.Labels.Count);
-            Assert.AreEqual(3, result.Values.Count);
-        }
-
         [TestMethod]
         public void Npv()
         {
             // Arrange
             var helper = new ComputeService();
+            var model = new NpvDataModel()
+            {
+                InitialInvestment = 150000,
+                CashFlows = new List<double> { 50000, 25000 },
+                DiscountRate = 1.2
+            };
 
             // Act
-            var result = helper.Npv(model, model.LowerBoundDiscountRate);
+            var result = helper.Npv(model);
 
             // Assert
-            Assert.AreEqual(-76182.26, result);
+            Assert.IsTrue(result is NpvResultModel);
+            Assert.AreEqual(1.2, result.DiscountRate);
+            Assert.AreEqual(-76182.26, result.NetPresentValue);
         }
     }
 }

@@ -17,21 +17,19 @@ namespace NpvSpaApplication.Tests.Controllers
             var controller = new ValuesController(new ComputeService());
 
             // Act
-            dynamic result = controller.Post(new NpvObjectModel()
+            dynamic result = controller.Post(new NpvDataModel()
             {
                 InitialInvestment = 150000,
                 CashFlows = new List<double>{ 50000, 25000 },
-                LowerBoundDiscountRate = 1.2,
-                UpperBoundDiscountRate = 1.4,
-                DiscountRateIncrement = 0.1
+                DiscountRate = 1.2
             });
 
             // Assert
             Assert.IsNotNull(result);
             Assert.IsTrue(result is IHttpActionResult);
             Assert.IsNotNull(result.Content);
-            Assert.AreEqual(3, result.Content.Labels.Count);
-            Assert.AreEqual(3, result.Content.Values.Count);
+            Assert.AreEqual(1.2, result.Content.DiscountRate);
+            Assert.AreEqual(-76182.26, result.Content.NetPresentValue);
         }
     }
 }

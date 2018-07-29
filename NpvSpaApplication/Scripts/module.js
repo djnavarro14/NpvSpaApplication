@@ -67,44 +67,68 @@
 
             return true;
         }
-
-        var drawChart = function (data) {
-            if ($scope.chart) {
-                $scope.chart.destroy();
-            }
-
-            $scope.chart = new Chart(document.getElementById(model.chartResult), {
-                type: 'line',
-                data: {
-                    labels: data.Labels,
-                    datasets: [
-                        {
-                            label: "NPV",
-                            data: data.Values
-                        }
-                    ]
+        
+        var showChart = function (data) {
+            var chart = new CanvasJS.Chart("chartResult", {
+                animationEnabled: true,
+                title: {
+                    text: "NPV per Discount Rate",
+                    padding: 10,
+                    horizontalAlign: "right"
                 },
-                options: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'NPV Calculations per Discount Rate'
-                    }
-                }
+                axisY: {
+                    title: 'NPV',
+                    includeZero: false
+                },
+                axisX: {
+                    title: 'Discount Rate',
+                    interval: $scope.model.DiscountRateIncrement
+                },
+                data: [{
+                    type: "line",
+                    xValueFormatString: "#0.00\"%\"",
+                    dataPoints: data
+                }]
             });
+            chart.render();
+            $(model.modalResult).modal('show');
+        }
+
+        var extractData = function (result) {
+            var data = [];
+            result.forEach(function(item) {
+                data.push({
+                    x: item.data.DiscountRate,
+                    y: item.data.NetPresentValue
+                });
+            });
+            return data.sort(function (a, b) {
+                return a.x - b.x;
+            });
+        }
+
+        var round = function (value, decimal) {
+            return Number(Math.round(value + 'e' + decimal) + 'e-' + decimal);
         }
 
         $scope.calculate = function () {
             if (!validateFields()) {
                 return;
             }
-            
-            npvService.post($scope.model).then(function (result) {
-                drawChart(result.data)
-                $(model.modalResult).modal('show');
-            }, function (error) {
-                debugger;
-                showMessage(error);
+
+            var promises = [];
+            var discountRate = $scope.model.LowerBoundDiscountRate;
+            while (discountRate <= $scope.model.UpperBoundDiscountRate) {
+                promises.push(npvService.post({
+                    InitialInvestment: $scope.model.InitialInvestment,
+                    CashFlows: $scope.model.CashFlows,
+                    DiscountRate: discountRate
+                }));
+                discountRate = round(discountRate + $scope.model.DiscountRateIncrement, 2);
+            };
+
+            Promise.all(promises).then(function (result) {
+                showChart(extractData(result));
             });
         }
     });      

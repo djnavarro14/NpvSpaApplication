@@ -1,11 +1,7 @@
 ﻿@model NpvSpaApplication.Models.NpvObjectModel
 
-@{
-    ViewBag.Title = "NPV Calculator";
-}
-
 @Scripts.Render("~/bundles/angular")
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script>
     new AppViewModel({
         @Html.IdFor(model => model.InitialInvestment): @Model.InitialInvestment,
@@ -13,8 +9,6 @@
         @Html.IdFor(model => model.CashFlows): @Json.Encode(Model.CashFlows),
         @Html.IdFor(model => model.LowerBoundDiscountRate): @Model.LowerBoundDiscountRate,
         @Html.IdFor(model => model.UpperBoundDiscountRate): @Model.UpperBoundDiscountRate,
-        @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
-        @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
         @Html.IdFor(model => model.DiscountRateIncrement): @Model.DiscountRateIncrement,
         modalAlert: '#modalAlert',
         modalResult: '#modalResult',
@@ -129,7 +123,7 @@
                         <h4 class="modal-title">NPV Result</h4>
                     </div>
                     <div class="modal-body">
-                        <canvas id="chartResult" style="width: 80%; height: 80%"></canvas>
+                        <div id="chartResult" style="height: 400px"></div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>

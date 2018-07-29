@@ -7,7 +7,7 @@ namespace NpvSpaApplication.Controllers
     {
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Npv Calculator";
 
             return View(new NpvObjectModel());
         }
